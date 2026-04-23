@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 
+const API_URL = 'ad-collector.vercel.app'; // 배포된 주소
+
 interface Ad {
   id: number;
   date: string; // 행사 일자 (분류 기준)
@@ -33,7 +35,7 @@ function App() {
   const fetchAds = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5001/api/ads');
+      const response = await axios.get(`${API_URL}/api/ads`);
       if (response.data.success) {
         setAds(response.data.data);
       }
