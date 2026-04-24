@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 
-const API_URL = 'ad-collector.vercel.app'; // 배포된 주소
+const API_URL = 'https://ad-collector-backend.onrender.com';
 
 interface Ad {
   id: number;
@@ -61,17 +61,16 @@ function App() {
       }
 
       if (editingId !== null) {
-        // 수정 모드: PUT 요청
-        await axios.put(`https://ad-collector-backend.onrender.com/api/ads/${editingId}`, submissionData);
+        await axios.put(`${API_URL}/api/ads/${editingId}`, submissionData);
         setStatus('✅ 성공적으로 수정되었습니다!');
         setEditingId(null);
       } else {
-        // 생성 모드: POST 요청
-        await axios.post('https://ad-collector-backend.onrender.com/api/ads', submissionData);
+        await axios.post(`${API_URL}/api/ads`, submissionData);
         setStatus('✅ 성공적으로 제출되었습니다!');
       }
       setFormData({ title: '', content: '', author: '', category: '광고', location: '', eventDate: '' });
       fetchAds();
+      setTimeout(() => setStatus(''), 3000);
     } catch (error) {
       setStatus('❌ 작업에 실패했습니다.');
       console.error(error);
@@ -81,7 +80,7 @@ function App() {
   const handleDelete = async (id: number) => {
     if (!confirm('정말 삭제하시겠습니까?')) return;
     try {
-      await axios.delete(`https://ad-collector-backend.onrender.com/api/ads/${id}`);
+      await axios.delete(`${API_URL}/api/ads/${id}`);
       fetchAds();
     } catch (error) {
       alert('삭제 실패');
@@ -106,6 +105,7 @@ function App() {
       setEditingId(null);
       setFormData({ title: '', content: '', author: '', category: '광고', location: '', eventDate: '' });
     }
+    setStatus('');
     setView(v);
   };
 
