@@ -7,7 +7,7 @@ const { Client } = require('@notionhq/client');
 
 const app = express();
 app.use(cors({
-  origin: ['https://ad-collector.vercel.app', 'https://ad-collector-gkbyl03w-joyfulchurchministry-collabs-projects.vercel.app']
+  origin: ['https://ad-collector.vercel.app', 'https://ad-collector-gkbyl03w-joyfulchurchministry-collabs-projects.vercel.app', 'https://joyfulschedule.vercel.app']
 }));
 app.use(express.json());
 
