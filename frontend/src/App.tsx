@@ -230,7 +230,7 @@ function App() {
                       categorizedAds.currentWeek["부서별 행사일정"].map((ad, idx) => (
                         <div key={idx} className="ad-card">
                           <h3>{ad.title || '제목 없음'}</h3>
-                          <div className="ad-info-badges">
+                          <div style={{ display: 'flex', gap: '10px', fontSize: '0.8rem', color: '#666', marginBottom: '8px' }}>
                             <div className="ad-date-badge">📅 {formatDisplayDate(ad.date)}</div>
                             {ad.location && <div className="ad-location">📍 {ad.location}</div>}
                           </div>
@@ -257,7 +257,7 @@ function App() {
                       {categorizedAds.futureEvents.map((ad, idx) => (
                         <div key={idx} className="ad-card">
                           <h3>{ad.title || '제목 없음'}</h3>
-                          <div className="ad-info-badges">
+                          <div style={{ display: 'flex', gap: '10px', fontSize: '0.8rem', color: '#666', marginBottom: '8px' }}>
                             <div className="ad-date-badge">📅 {formatDisplayDate(ad.date)}</div>
                             {ad.location && <div className="ad-location">📍 {ad.location}</div>}
                           </div>
