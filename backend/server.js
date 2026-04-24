@@ -6,7 +6,9 @@ const { JWT } = require('google-auth-library');
 const { Client } = require('@notionhq/client');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ['https://ad-collector.vercel.app', 'https://ad-collector-gkbyl03w-joyfulchurchministry-collabs-projects.vercel.app']
+}));
 app.use(express.json());
 
 const PORT = process.env.PORT || 5001;
