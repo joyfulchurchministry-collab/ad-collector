@@ -62,12 +62,12 @@ function App() {
 
       if (editingId !== null) {
         // 수정 모드: PUT 요청
-        await axios.put(`http://localhost:5001/api/ads/${editingId}`, submissionData);
+        await axios.put(`https://ad-collector-backend.onrender.com/api/ads/${editingId}`, submissionData);
         setStatus('✅ 성공적으로 수정되었습니다!');
         setEditingId(null);
       } else {
         // 생성 모드: POST 요청
-        await axios.post('http://localhost:5001/api/ads', submissionData);
+        await axios.post('https://ad-collector-backend.onrender.com/api/ads', submissionData);
         setStatus('✅ 성공적으로 제출되었습니다!');
       }
       setFormData({ title: '', content: '', author: '', category: '광고', location: '', eventDate: '' });
@@ -81,7 +81,7 @@ function App() {
   const handleDelete = async (id: number) => {
     if (!confirm('정말 삭제하시겠습니까?')) return;
     try {
-      await axios.delete(`http://localhost:5001/api/ads/${id}`);
+      await axios.delete(`https://ad-collector-backend.onrender.com/api/ads/${id}`);
       fetchAds();
     } catch (error) {
       alert('삭제 실패');
