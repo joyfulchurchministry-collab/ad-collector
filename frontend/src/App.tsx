@@ -55,7 +55,14 @@ function App() {
     try {
       const submissionData = { ...formData };
       if (submissionData.category === "부서별 행사일정" && submissionData.eventDate) {
-        submissionData.eventDate = new Date(submissionData.eventDate).toISOString();
+        const date = new Date(submissionData.eventDate);
+        const minutes = date.getMinutes();
+        // Round to nearest 30 minutes
+        const roundedMinutes = Math.round(minutes / 30) * 30;
+        date.setMinutes(roundedMinutes);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        submissionData.eventDate = date.toISOString();
       } else {
         submissionData.eventDate = new Date().toISOString();
       }
@@ -209,7 +216,7 @@ function App() {
               <>
                 <div className="form-group">
                   <label>행사 일시</label>
-                  <input type="datetime-local" name="eventDate" value={formData.eventDate} onChange={handleChange} required />
+                  <input type="datetime-local" name="eventDate" value={formData.eventDate} onChange={handleChange} required step="1800" />
                 </div>
                 <div className="form-group">
                   <label>장소</label>
