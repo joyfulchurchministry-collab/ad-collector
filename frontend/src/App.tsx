@@ -89,13 +89,22 @@ function App() {
 
   const handleEdit = (ad: Ad) => {
     setEditingId(ad.id);
+    let formattedDate = '';
+    if (ad.date) {
+      const d = new Date(ad.date);
+      if (!isNaN(d.getTime())) {
+        // datetime-local input requires YYYY-MM-DDTHH:mm format
+        const pad = (n: number) => n.toString().padStart(2, '0');
+        formattedDate = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      }
+    }
     setFormData({
       title: ad.title,
       content: ad.content,
       author: ad.author,
       category: ad.category,
       location: ad.location || '',
-      eventDate: ad.date ? ad.date.split('T')[0] : ''
+      eventDate: formattedDate
     });
     setView('submit');
   };
@@ -159,7 +168,9 @@ function App() {
   const formatDisplayDate = (dateStr: string) => {
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return dateStr;
-    return d.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' });
+    const datePart = d.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' });
+    const timePart = d.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+    return `${datePart} ${timePart}`;
   };
 
   const formatRegTime = (dateStr: string) => {
@@ -197,8 +208,8 @@ function App() {
             {formData.category === "부서별 행사일정" && (
               <>
                 <div className="form-group">
-                  <label>행사 일자</label>
-                  <input type="date" name="eventDate" value={formData.eventDate} onChange={handleChange} required />
+                  <label>행사 일시</label>
+                  <input type="datetime-local" name="eventDate" value={formData.eventDate} onChange={handleChange} required />
                 </div>
                 <div className="form-group">
                   <label>장소</label>
