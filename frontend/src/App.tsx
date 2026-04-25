@@ -16,6 +16,11 @@ interface Ad {
 }
 
 const CATEGORIES = ["부서별 행사일정", "외부사역", "교우소식", "광고", "영상광고"];
+const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
+  const hour = Math.floor(i / 2).toString().padStart(2, '0');
+  const minute = (i % 2 === 0 ? '00' : '30');
+  return `${hour}:${minute}`;
+});
 
 function App() {
   const [view, setView] = useState<'submit' | 'dashboard' | 'events'>('dashboard');
@@ -55,14 +60,11 @@ function App() {
     try {
       const submissionData = { ...formData };
       if (submissionData.category === "부서별 행사일정" && submissionData.eventDate) {
-        const date = new Date(submissionData.eventDate);
-        const minutes = date.getMinutes();
-        // Round to nearest 30 minutes
-        const roundedMinutes = Math.round(minutes / 30) * 30;
-        date.setMinutes(roundedMinutes);
-        date.setSeconds(0);
-        date.setMilliseconds(0);
-        submissionData.eventDate = date.toISOString();
+        // Ensure eventDate has both T and time (from split inputs)
+        const [datePart, timePart] = submissionData.eventDate.split('T');
+        const finalDate = datePart || new Date().toISOString().split('T')[0];
+        const finalTime = timePart || "09:00";
+        submissionData.eventDate = new Date(`${finalDate}T${finalTime}`).toISOString();
       } else {
         submissionData.eventDate = new Date().toISOString();
       }
@@ -100,9 +102,12 @@ function App() {
     if (ad.date) {
       const d = new Date(ad.date);
       if (!isNaN(d.getTime())) {
-        // datetime-local input requires YYYY-MM-DDTHH:mm format
         const pad = (n: number) => n.toString().padStart(2, '0');
-        formattedDate = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        const datePart = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+        // Round to nearest 30 mins for the select box
+        const mins = d.getMinutes() < 30 ? '00' : '30';
+        const timePart = `${pad(d.getHours())}:${mins}`;
+        formattedDate = `${datePart}T${timePart}`;
       }
     }
     setFormData({
@@ -216,7 +221,30 @@ function App() {
               <>
                 <div className="form-group">
                   <label>행사 일시</label>
-                  <input type="datetime-local" name="eventDate" value={formData.eventDate} onChange={handleChange} required step="1800" />
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <input 
+                      type="date" 
+                      name="eventDateOnly" 
+                      value={formData.eventDate.split('T')[0] || ''} 
+                      onChange={(e) => {
+                        const timePart = formData.eventDate.split('T')[1] || '09:00';
+                        setFormData({ ...formData, eventDate: `${e.target.value}T${timePart}` });
+                      }} 
+                      required 
+                      style={{ flex: 2 }}
+                    />
+                    <select 
+                      name="eventTimeOnly" 
+                      value={formData.eventDate.split('T')[1] || '09:00'} 
+                      onChange={(e) => {
+                        const datePart = formData.eventDate.split('T')[0] || new Date().toISOString().split('T')[0];
+                        setFormData({ ...formData, eventDate: `${datePart}T${e.target.value}` });
+                      }}
+                      style={{ flex: 1 }}
+                    >
+                      {TIME_OPTIONS.map(time => <option key={time} value={time}>{time}</option>)}
+                    </select>
+                  </div>
                 </div>
                 <div className="form-group">
                   <label>장소</label>
