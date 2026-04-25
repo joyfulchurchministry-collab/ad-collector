@@ -95,7 +95,7 @@ button[type="submit"] {
 }
 
 .ad-card h3 { margin: 0 0 4px 0; color: #333; font-size: 0.85rem; }
-.ad-card p { font-size: 0.75rem; color: #555; margin-bottom: 8px; line-height: 1.3; }
+.ad-card p { font-size: 0.75rem; color: #555; margin-bottom: 8px; line-height: 1.3; white-space: pre-wrap; }
 
 .ad-actions { display: flex; gap: 5px; justify-content: flex-end; margin-top: 5px;}
 .ad-actions button {
